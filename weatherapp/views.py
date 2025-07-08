@@ -27,6 +27,7 @@ def home(request):
 
     data = requests.get(city_url).json()
     search_items = data.get("items")
+    print("OPENWEATHER_API_KEY:", OPENWEATHER_API_KEY)
     if search_items and len(search_items) > 1 and 'link' in search_items[1]:
         image_url = search_items[1]['link']
     else:
@@ -46,6 +47,21 @@ def home(request):
             'city': city,
             'exception_occurred': False,
             'image_url': ('https://images.pexels.com/photos/3008509/pexels-photo-3008509.jpeg?auto=compress&cs=tinysrgb&w=1600')
+        })
+    except Exception as e:
+        print("Google API error:", e)
+        image_url = 'https://images.pexels.com/photos/3008509/pexels-photo-3008509.jpeg?auto=compress&cs=tinysrgb&w=1600'
+        exception_occurred = True
+        messages.error(request, 'Entered data is not available to API')
+        day = datetime.date.today()
+        return render(request, 'weatherapp/index.html', {
+            'description': 'clear sky',
+            'icon': '01d',
+            'temp': 25,
+            'day': day,
+            'city': 'indore',
+            'exception_occurred': exception_occurred,
+            'image_url': image_url
         })
     except KeyError:
         exception_occurred = True
