@@ -2,20 +2,23 @@ from django.shortcuts import render
 from django.contrib import messages
 import requests
 import datetime
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
 def home(request):
     if 'city' in request.POST:
         city = request.POST['city']
     else:
         city = 'indore'
-
-    OPENWEATHER_API_KEY = '666dc6c4b741256bb36eb38355d13257'
-    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid=666dc6c4b741256bb36eb38355d13257'
+     # OpenWeatherMap API
+    OPENWEATHER_API_KEY = os.environ.get('OPENWEATHER_API_KEY')
+    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={OPENWEATHER_API_KEY}'
     PARAMS = {'units': 'metric'}
 
     # Google Custom Search (you need valid keys for this to work)
-    GOOGLE_API_KEY = 'AIzaSyCyRdO-Ch5QwBYt_h4FGD-BjYxWtchZWks'  # <-- your Google API key
-    SEARCH_ENGINE_ID = '53faddbfcb1de4e74'  # <-- your Search Engine ID
+    GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
+    SEARCH_ENGINE_ID = os.environ.get('SEARCH_ENGINE_ID')
     query = city + " 1920x1080"
     page = 1
     start = (page - 1) * 10 + 1
